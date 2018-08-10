@@ -60,17 +60,16 @@ public class ClientThread extends Thread {
                 
                 //envia resposta de inicio de partida
                 Resposta resp2 = new Resposta();
-                resp2 = listaRespostas.take();
-                System.out.println("ID 1- " +jogadorId);
-                resp2.jogadorId = jogadorId;
-                System.out.println("ID 2- " +resp2.jogadorId);
-                for (int k = 0; k < resp2.jogadores[0].length; k++) {
-        			for (int o = 0; o < resp2.jogadores[0].length; o++)
-        				System.out.print(resp2.jogadores[k][o]+" ");
-        			
-        			System.out.println("");
-        		}
-        		System.out.println("-------------------------------\n");
+                resp2 = listaRespostasDedicado.take();
+                System.out.println("ID - " + resp2.jogadorId);
+                for (int k = 0; k < resp2.jogadores.length ; k++) {
+                	for (int l = 0 ; l < resp2.jogadores[0].length; l++)
+                		System.out.print(resp2.jogadores[k][l] + " ");
+                	
+                	System.out.println("");
+                }
+                System.out.println("----------------------------------");
+                
                 out.writeObject(resp2);
                 
                 break;

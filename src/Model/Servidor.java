@@ -62,14 +62,18 @@ public class Servidor {
 			}
 		}
 		System.out.println("teste");
-		Resposta segundaResp = new Resposta();
-		for (int k = 0; k < jogadoresServidor[0].length; k++)
-			jogadoresServidor[3][k] = "0";
-		
-		segundaResp.jogadores = jogadoresServidor;
-		segundaResp.qtdJogadores = numJogadores;
-		segundaResp.serverStatus = Long.valueOf(7);
-		serv.enviarResp(segundaResp, numJogadores);
+		for (int m = 1; m <= numJogadores; m++) {
+			Resposta segundaResp = new Resposta();
+			for (int k = 0; k < jogadoresServidor[0].length; k++)
+				jogadoresServidor[3][k] = "0";
+			
+			segundaResp.jogadores = jogadoresServidor;
+			segundaResp.qtdJogadores = numJogadores;
+			segundaResp.serverStatus = Long.valueOf(7);
+			segundaResp.jogadorId = Long.valueOf(m);
+			serv.enviarRespDedicada(segundaResp, m);
+		}
+			
 
 		while (listaREQ.size() > 1) {
 			listaREQ = serv.getReq();

@@ -50,19 +50,19 @@ public class ServidorService extends Thread {
             for (i = 0; i < maxClientsCount; i++) {
                 if (threads[i] == null) {
                 	if (i == 0) {
-                		(threads[i] = new ClientThread(clientSocket, threads, listaRequisicoes, listaRespostas, Long.valueOf(i + 1), listaRespostas_1)).start();
+                		(threads[i] = new ClientThread(clientSocket, threads, listaRequisicoes, listaRespostas, Long.valueOf(1), listaRespostas_1)).start();
                 	}
                 	else if (i == 1) {
-                		(threads[i] = new ClientThread(clientSocket, threads, listaRequisicoes, listaRespostas, Long.valueOf(i + 1), listaRespostas_2)).start();
+                		(threads[i] = new ClientThread(clientSocket, threads, listaRequisicoes, listaRespostas, Long.valueOf(2), listaRespostas_2)).start();
                 	}
                 	else if (i == 2) {
-                		(threads[i] = new ClientThread(clientSocket, threads, listaRequisicoes, listaRespostas, Long.valueOf(i + 1), listaRespostas_3)).start();
+                		(threads[i] = new ClientThread(clientSocket, threads, listaRequisicoes, listaRespostas, Long.valueOf(3), listaRespostas_3)).start();
                 	}
                 	else if (i == 3) {
-                		(threads[i] = new ClientThread(clientSocket, threads, listaRequisicoes, listaRespostas, Long.valueOf(i + 1), listaRespostas_4)).start();
+                		(threads[i] = new ClientThread(clientSocket, threads, listaRequisicoes, listaRespostas, Long.valueOf(4), listaRespostas_4)).start();
                 	}
                 	else if (i == 4) {
-                		(threads[i] = new ClientThread(clientSocket, threads, listaRequisicoes, listaRespostas, Long.valueOf(i + 1), listaRespostas_5)).start();
+                		(threads[i] = new ClientThread(clientSocket, threads, listaRequisicoes, listaRespostas, Long.valueOf(5), listaRespostas_5)).start();
                 	}
                     
                     System.out.println("Conex�o estabelecida de " + clientSocket.getInetAddress()
