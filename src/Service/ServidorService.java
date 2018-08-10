@@ -15,7 +15,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ServidorService {
+public class ServidorService extends Thread {
 
     //private Servidor server;
     private ServerSocket serverSocket = null;
@@ -26,20 +26,45 @@ public class ServidorService {
     public int numJogadores = 0;
     BlockingQueue<Requisicao> listaRequisicoes = new ArrayBlockingQueue<>(5);
     BlockingQueue<Resposta> listaRespostas = new ArrayBlockingQueue<>(5);
-
+    BlockingQueue<Resposta> listaRespostas_1 = new ArrayBlockingQueue<>(5);
+    BlockingQueue<Resposta> listaRespostas_2 = new ArrayBlockingQueue<>(5);
+    BlockingQueue<Resposta> listaRespostas_3 = new ArrayBlockingQueue<>(5);
+    BlockingQueue<Resposta> listaRespostas_4 = new ArrayBlockingQueue<>(5);
+    BlockingQueue<Resposta> listaRespostas_5 = new ArrayBlockingQueue<>(5);
+    
     public ServidorService(int portNumber) throws IOException {
         this.portNumber = portNumber;
         serverSocket = new ServerSocket(this.portNumber);
     }
 
-    public void abrirServidor() throws IOException {
+    public void run() {
         int i;
         while (true) {
-            clientSocket = serverSocket.accept();
+            try {
+				clientSocket = serverSocket.accept();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             //Procura um thread vazio e aloca o novo cliente nele
             for (i = 0; i < maxClientsCount; i++) {
                 if (threads[i] == null) {
-                    (threads[i] = new ClientThread(clientSocket, threads, listaRequisicoes, listaRespostas, Long.valueOf(i + 1))).start();
+                	if (i == 0) {
+                		(threads[i] = new ClientThread(clientSocket, threads, listaRequisicoes, listaRespostas, Long.valueOf(i + 1), listaRespostas_1)).start();
+                	}
+                	else if (i == 1) {
+                		(threads[i] = new ClientThread(clientSocket, threads, listaRequisicoes, listaRespostas, Long.valueOf(i + 1), listaRespostas_2)).start();
+                	}
+                	else if (i == 2) {
+                		(threads[i] = new ClientThread(clientSocket, threads, listaRequisicoes, listaRespostas, Long.valueOf(i + 1), listaRespostas_3)).start();
+                	}
+                	else if (i == 3) {
+                		(threads[i] = new ClientThread(clientSocket, threads, listaRequisicoes, listaRespostas, Long.valueOf(i + 1), listaRespostas_4)).start();
+                	}
+                	else if (i == 4) {
+                		(threads[i] = new ClientThread(clientSocket, threads, listaRequisicoes, listaRespostas, Long.valueOf(i + 1), listaRespostas_5)).start();
+                	}
+                    
                     System.out.println("Conex�o estabelecida de " + clientSocket.getInetAddress()
                             + " |  Aguardadndo entrada de cliente...");
                     //apos encontrar o thread vazio, sai do loop
@@ -55,7 +80,9 @@ public class ServidorService {
         //adicionar na blockqueue uma resposta apra cada thread 
         for (int i = 0; i < numeroJogadores; i++) {
             try {
-                listaRespostas.put(resp);
+            	Resposta novaResposta = new Resposta();
+            	novaResposta = resp;
+                listaRespostas.put(novaResposta);
             } catch (InterruptedException ex) {
                 Logger.getLogger(ServidorService.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -87,10 +114,24 @@ public class ServidorService {
         return null;
     }
 
-    public void enviarPrimeiraResp(Resposta resp) {
+    public void enviarRespDedicada(Resposta resp, int threadnum) {
 
         try {
-            listaRespostas.put(resp);
+        	if (threadnum == 1) {
+        		listaRespostas_1.put(resp);
+        	}
+        	else if (threadnum == 2) {
+        		listaRespostas_2.put(resp);
+        	}
+        	else if (threadnum == 3) {
+        		listaRespostas_3.put(resp);
+        	}
+        	else if (threadnum == 4) {
+        		listaRespostas_4.put(resp);
+        	}
+        	else if (threadnum == 5) {
+        		listaRespostas_5.put(resp);
+        	}
         } catch (InterruptedException ex) {
             Logger.getLogger(ServidorService.class.getName()).log(Level.SEVERE, null, ex);
         }

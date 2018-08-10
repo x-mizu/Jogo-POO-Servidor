@@ -19,17 +19,19 @@ public class ClientThread extends Thread {
     private int maxClientsCount;
     private BlockingQueue<Requisicao> listaRequisicoes = new ArrayBlockingQueue<>(5);
     private BlockingQueue<Resposta> listaRespostas = new ArrayBlockingQueue<>(5);
+    private BlockingQueue<Resposta> listaRespostasDedicado = new ArrayBlockingQueue<>(5);
     private ObjectInputStream in = null;
     private ObjectOutputStream out = null;
     private Long jogadorId;
 
-    public ClientThread(Socket clientSocket, ClientThread[] threads, BlockingQueue<Requisicao> listaReq, BlockingQueue<Resposta> listaRes, Long jogadorId) {
+    public ClientThread(Socket clientSocket, ClientThread[] threads, BlockingQueue<Requisicao> listaReq, BlockingQueue<Resposta> listaRes, Long jogadorId, BlockingQueue<Resposta> listaResDed) {
         this.clientSocket = clientSocket;
         this.threads = threads;
         maxClientsCount = threads.length;
         this.listaRequisicoes = listaReq;
         this.listaRespostas = listaRes;
         this.jogadorId = jogadorId;
+        this.listaRespostasDedicado = listaResDed;
     }
 
     public void run() {
@@ -43,29 +45,34 @@ public class ClientThread extends Thread {
             //pega uma requisicao de inicio do jogador
             Requisicao req = (Requisicao) in.readObject();
             req.jogadorId = jogadorId;
-            System.out.println(req.jogadorNickname);
             listaRequisicoes.put(req);
-            //envia uma primeira resposta ao jogador, com seu id e os jogadores que estao no server
-            Resposta resp1 = listaRespostas.take();
-            resp1.jogadorId = jogadorId;
-            resp1.serverStatus = Long.valueOf(1);
-            for(int i = 0; i < resp1.jogadores[0].length ; i++)
-                resp1.jogadores[3][i] = "0";
             
+            //envia uma primeira resposta ao jogador, com seu id e os jogadores que estao no server
+            Resposta resp1 = new Resposta();
+            resp1 = listaRespostasDedicado.take();
             out.writeObject(resp1);
             
-            //pega a requisicao de jogador pronto
-            listaRequisicoes.put((Requisicao) in.readObject());
-            //envia resposta de inicio de partida
-            Resposta resp2 = listaRespostas.take();
-            resp2.jogadorId = jogadorId;
-            resp2.serverStatus = Long.valueOf(7);
-            for(int i = 0; i < resp2.jogadores[0].length ; i++)
-                resp2.jogadores[3][i] = "0";
-            
-            out.writeObject(resp2);
-                
+   
             while (true) {
+                //pega a requisicao de jogador pronto
+            	Requisicao reqJ = (Requisicao) in.readObject();
+                listaRequisicoes.put(reqJ);
+                
+                //envia resposta de inicio de partida
+                Resposta resp2 = new Resposta();
+                resp2 = listaRespostas.take();
+                System.out.println("ID 1- " +jogadorId);
+                resp2.jogadorId = jogadorId;
+                System.out.println("ID 2- " +resp2.jogadorId);
+                for (int k = 0; k < resp2.jogadores[0].length; k++) {
+        			for (int o = 0; o < resp2.jogadores[0].length; o++)
+        				System.out.print(resp2.jogadores[k][o]+" ");
+        			
+        			System.out.println("");
+        		}
+        		System.out.println("-------------------------------\n");
+                out.writeObject(resp2);
+                
                 break;
             }
 
