@@ -218,12 +218,12 @@ public class Servidor {
 
 					if (jogadoresServidor[3][i].equals("7")) 
 						cnumJogadoresProntos++;
-	
 
-					if (cnumJogadores >= 2 && cnumJogadoresProntos == cnumJogadores) 
-						inicioPartida = false;		
-					
 				}
+				
+				if (cnumJogadores >= 2 && cnumJogadoresProntos == cnumJogadores) 
+					inicioPartida = false;	
+				
 				cnumJogadores = 0;
 				cnumJogadoresProntos = 0;
 				try {
